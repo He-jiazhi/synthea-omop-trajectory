@@ -1,0 +1,23 @@
+.DS_Store
+**/.DS_Store
+
+# R
+.Rhistory
+.RData
+.Rproj.user
+*.Rproj
+
+# Local databases / caches
+*.duckdb
+*.duckdb.wal
+*.duckdb.tmp
+
+# Outputs (generated artifacts)
+outputs/
+synthea_outputs/
+
+# Optional: ignore large CSV artifacts if they end up outside outputs
+*.csv
+
+# Keep docs images for README
+!docs/*.png

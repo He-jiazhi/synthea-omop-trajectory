@@ -1,0 +1,89 @@
+---
+title: "Synthea OMOP Treatment Trajectory Modeling"
+format:
+  html:
+    toc: true
+    number-sections: true
+execute:
+  echo: true
+  warning: false
+  message: true
+---
+
+## Overview
+
+This report documents an end-to-end pipeline for treatment trajectory modeling using **Synthea synthetic EHR** in **OMOP CDM** format (CSV), sourced from AWS Open Data.
+
+Pipeline components:
+
+- Cohort definition (new users) using source-value matching
+- Longitudinal trajectory construction (monthly PDC)
+- Exploratory visualization (persistence, spaghetti plots)
+- Trajectory modeling (LCA via `poLCA`, GBTM via `gbmt`)
+- Predictive modeling (baseline covariates → trajectory class)
+
+## How to run
+
+1. Run the pipeline script:
+
+```r
+source("synthea_omop_pipeline_csv.R")
+```
+
+2. The script writes outputs to `synthea_outputs/`.
+3. Render this report (optional):
+
+```bash
+quarto render synthea_omop_report_template.qmd
+```
+
+## Outputs
+
+```{r}
+list.files("synthea_outputs", full.names = TRUE)
+```
+
+### Cohort and trajectory artifacts
+
+```{r}
+traj <- read.csv("synthea_outputs/traj_long.csv")
+head(traj)
+```
+
+### Persistence plot
+
+```{r}
+knitr::include_graphics("synthea_outputs/persistence.png")
+```
+
+### Spaghetti plot
+
+```{r}
+knitr::include_graphics("synthea_outputs/pdc_spaghetti.png")
+```
+
+### LCA model selection
+
+```{r}
+lca_sel <- read.csv("synthea_outputs/lca_model_selection.csv")
+lca_sel
+```
+
+### GBTM model selection
+
+```{r}
+gb_sel <- read.csv("synthea_outputs/gbtm_model_selection.csv")
+gb_sel
+```
+
+### Prediction metrics
+
+```{r}
+read.csv("synthea_outputs/prediction_metrics.csv")
+```
+
+## Notes / Next steps
+
+- Replace source-value matching with concept-set logic once vocabulary tables (`concept`, `concept_ancestor`) are available.
+- Extend from binary coverage to multi-state trajectories (e.g., add-on/switching classes) by building a second drug set and encoding states {none, target-only, combo}.
+- Add richer baseline covariates from `measurement.csv` (e.g., BMI, HbA1c) using robust string patterns or mapping tables.
