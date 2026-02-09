@@ -37,7 +37,7 @@ FOLLOWUP_MONTHS <- 12
 REFILL_GAP_DAYS <- 60                                        # for attrition (optional)
 SEED <- 123
 
-OUT_DIR <- "synthea_outputs"
+OUT_DIR <- "outputs"
 dir.create(OUT_DIR, showWarnings = FALSE, recursive = TRUE)
 
 message("Output dir: ", normalizePath(OUT_DIR))

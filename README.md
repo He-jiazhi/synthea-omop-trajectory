@@ -10,7 +10,7 @@ End-to-end pipeline for real-world treatment trajectory modeling on OMOP CDM dat
 
 ## Repository structure
 - `scripts/` : main pipeline (`synthea_omop_pipeline.R`)
-- `report/`  : optional Quarto template
+- `reports/`  : optional Quarto template
 - `docs/`    : example figures for README
 - `outputs/` : generated artifacts (ignored by git)
 
@@ -30,7 +30,10 @@ End-to-end pipeline for real-world treatment trajectory modeling on OMOP CDM dat
 
 ### Run
 ```r
-setwd("path/to/repo")
+install.packages(c(
+  "DBI","duckdb","dplyr","dbplyr","tidyr","lubridate",
+  "ggplot2","poLCA","gbmt","rsample","nnet","yardstick"
+))
 source("scripts/synthea_omop_pipeline.R")
 ```
 
@@ -51,3 +54,11 @@ source("scripts/synthea_omop_pipeline.R")
 ![Persistence](docs/persistence.png)
 ![PDC trajectories](docs/pdc_spaghetti.png)
 ![GBTM](docs/gbtm_plot.png)
+
+## Assumptions & limitations
+- This demo uses Synthea OMOP CSV on public S3 and does **not** include OMOP vocabulary/concept tables.
+- Therefore cohort definitions rely on `*_source_value` / source codes. For real-world claims/EHR, replace this with concept_id-based definitions and proper drug/condition concept mapping.
+
+## Reproducibility
+- Tested with R >= 4.3 on macOS.
+- Outputs are written to `outputs/` (ignored by git). Edit `OUT_DIR` in the script to customize.
